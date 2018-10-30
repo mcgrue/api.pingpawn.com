@@ -73,6 +73,21 @@ def rand(prf=None):
     return do("SELECT q.* FROM `quotes` q, `prfs` p WHERE p.name = %s "+size_limit+" AND p.id = q.prf_id AND q.is_public = 1 ORDER BY RAND() LIMIT 1", [prf])
 
 
+
+@bp.route('/q/<quote_id>', defaults={}, strict_slashes = False)
+def get_quote(quote_id):
+  """
+  http://api.pingpawn.com/q/1234 – Fetcha quote by id 
+  """
+
+  quote_id = int(quote_id)
+
+  sql = "SELECT q.* FROM `quotes` q WHERE q.is_public = 1 AND q.id LIKE %s "
+  args = [quote_id]
+  
+  return do(sql, args) 
+
+
 @bp.route('/search/', defaults={'prf': False, 'offset': False}, strict_slashes = False)
 @bp.route('/search/<prf>', defaults={'offset': False}, strict_slashes = False)
 @bp.route('/search/<prf>/<offset>', strict_slashes = False)
